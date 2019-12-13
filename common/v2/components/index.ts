@@ -64,3 +64,4 @@ export { default as EthAddress } from './EthAddress';
 export { default as EditableText } from './EditableText';
 export { default as Account } from './Account';
 export { default as WalletConnectQr } from './WalletConnectQr';
+export { default as WalletConnectSignQr } from './WalletConnectSignQr';
