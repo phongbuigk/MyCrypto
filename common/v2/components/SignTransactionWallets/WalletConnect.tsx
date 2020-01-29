@@ -1,13 +1,12 @@
 import React, { useEffect, useReducer, useState, useContext } from 'react';
 
 import translate, { translateRaw } from 'v2/translations';
-import { Button, Spinner, WalletConnectReadOnlyQr } from 'v2/components';
-import { walletConnectReducer, WalletConnectReducer } from './WalletConnect.reducer';
+import { Button, Spinner, WalletConnectReadOnlyQr, InlineErrorMsg } from 'v2/components';
 import { WalletId, ISignComponentProps } from 'v2/types';
 import { WALLETS_CONFIG } from 'v2/config';
 import { WalletConnectContext } from 'v2/services/WalletService';
 
-import { InlineErrorMsg } from '../ErrorMessages';
+import { WalletConnectReducer, WalletConnectActions } from './WalletConnect.reducer';
 import './WalletConnect.scss';
 
 interface WalletConnectAddress {
@@ -53,7 +52,7 @@ export function SignTransactionWalletConnect({
   onSuccess
 }: ISignComponentProps) {
   const { sendTransaction } = useContext(WalletConnectContext);
-  const [state, dispatch] = useReducer(walletConnectReducer, initialWalletConnectState);
+  const [state, dispatch] = useReducer(WalletConnectReducer, initialWalletConnectState);
   // This qrcode trigger is to handle user accessing the incorrect account on their WalletConnect device
   const [displaySignReadyQR, setDisplaySignReadyQR] = useState(false);
   const { session, handleUnlock, handleReset } = useContext(WalletConnectContext);
@@ -64,7 +63,7 @@ export function SignTransactionWalletConnect({
     chainId: currentWalletConnectChainId
   }: WalletConnectQrContent) => {
     dispatch({
-      type: WalletConnectReducer.DETECT_ADDRESS,
+      type: WalletConnectActions.DETECT_ADDRESS,
       payload: {
         address: currentWalletConnectAddress,
         chainId: currentWalletConnectChainId,
@@ -92,7 +91,7 @@ export function SignTransactionWalletConnect({
   const promptSignTransaction = async () => {
     if (!state.isConnected || !state.isCorrectNetwork || !state.isCorrectAddress) return;
     dispatch({
-      type: WalletConnectReducer.BROADCAST_SIGN_TX,
+      type: WalletConnectActions.BROADCAST_SIGN_TX,
       payload: { isPendingTx: true }
     });
     sendTransaction({ from: state.detectedAddress, ...rawTransaction })
@@ -101,7 +100,7 @@ export function SignTransactionWalletConnect({
       })
       .catch((err: any) => {
         dispatch({
-          type: WalletConnectReducer.BROADCAST_SIGN_TX_ERROR,
+          type: WalletConnectActions.BROADCAST_SIGN_TX_ERROR,
           payload: { errMsg: err.message }
         });
       });
@@ -117,7 +116,7 @@ export function SignTransactionWalletConnect({
     )
       return;
     dispatch({
-      type: WalletConnectReducer.SET_WALLET_SIGNING_STATE_READY
+      type: WalletConnectActions.SET_WALLET_SIGNING_STATE_READY
     });
   });
 

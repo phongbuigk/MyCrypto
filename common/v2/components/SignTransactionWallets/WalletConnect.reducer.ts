@@ -1,7 +1,7 @@
 import { ExtendedAccount, ITxObject } from 'v2/types';
 import { IWalletConnectState, WalletSigningState } from './WalletConnect';
 
-export enum WalletConnectReducer {
+export enum WalletConnectActions {
   DETECT_ADDRESS,
   BROADCAST_SIGN_TX,
   BROADCAST_SIGN_TX_ERROR,
@@ -9,17 +9,17 @@ export enum WalletConnectReducer {
   SET_WALLET_SIGNING_STATE_READY
 }
 
-export interface IWalletConnectReducer {
-  type: WalletConnectReducer;
+export interface IWalletConnectActions {
+  type: WalletConnectActions;
   payload?: any;
 }
 
-export function walletConnectReducer(
+export function WalletConnectReducer(
   state: IWalletConnectState,
-  { type, payload }: IWalletConnectReducer
+  { type, payload }: IWalletConnectActions
 ) {
   switch (type) {
-    case WalletConnectReducer.DETECT_ADDRESS: {
+    case WalletConnectActions.DETECT_ADDRESS: {
       const {
         address,
         chainId,
@@ -39,14 +39,14 @@ export function walletConnectReducer(
         isCorrectNetwork: chainId === rawTransaction.chainId
       };
     }
-    case WalletConnectReducer.BROADCAST_SIGN_TX: {
+    case WalletConnectActions.BROADCAST_SIGN_TX: {
       const { isPendingTx } = payload;
       return {
         ...state,
         isPendingTx
       };
     }
-    case WalletConnectReducer.BROADCAST_SIGN_TX_ERROR: {
+    case WalletConnectActions.BROADCAST_SIGN_TX_ERROR: {
       const { errMsg, isPendingTx } = payload;
       return {
         ...state,
@@ -54,13 +54,13 @@ export function walletConnectReducer(
         isPendingTx
       };
     }
-    case WalletConnectReducer.CLEAR_ERROR: {
+    case WalletConnectActions.CLEAR_ERROR: {
       return {
         ...state,
         signingError: ''
       };
     }
-    case WalletConnectReducer.SET_WALLET_SIGNING_STATE_READY: {
+    case WalletConnectActions.SET_WALLET_SIGNING_STATE_READY: {
       return {
         ...state,
         walletSigningState: WalletSigningState.READY
