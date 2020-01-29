@@ -1,29 +1,18 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import translate, { translateRaw } from 'v2/translations';
-import { NetworkContext, isValidAddress } from 'v2/services';
-import { WalletId, FormData } from 'v2/types';
+import { WalletId, TAddress } from 'v2/types';
 import { WALLETS_CONFIG } from 'v2/config';
-import { notificationsActions } from 'v2/features/NotificationsPanel';
-import { WalletFactory, WalletConnectContext } from 'v2/services/WalletService';
+import { WalletFactory, WalletConnectService } from 'v2/services/WalletService';
+import { ToastContext } from 'v2/features/Toasts';
 
 import { Spinner } from '../Spinner';
 import WalletConnectReadOnlyQr from '../WalletConnectReadOnlyQr';
 import './WalletConnectProvider.scss';
 
 interface OwnProps {
-  formData: FormData;
   onUnlock(param: any): void;
-}
-
-interface StateProps {
-  showNotification: notificationsActions.TShowNotification;
-  isValidAddress: string; //getIsValidAddressFn;
-}
-
-interface WalletConnectAddress {
-  address: string;
-  chainId: number;
+  goToPreviousStep(): void;
 }
 
 export enum WalletConnectQRState {
@@ -32,42 +21,36 @@ export enum WalletConnectQRState {
   UNKNOWN // used upon component initialization when walletconnect status is not determined
 }
 
-export type WalletConnectQrContent = WalletConnectAddress | string;
-
 const WalletService = WalletFactory(WalletId.WALLETCONNECT);
 const wikiLink = WALLETS_CONFIG[WalletId.WALLETCONNECT].helpLink!;
 
-export function WalletConnectDecrypt({ formData, onUnlock }: OwnProps & StateProps) {
-  const { getNetworkByName } = useContext(NetworkContext);
-  const [network] = useState(getNetworkByName(formData.network));
-  const { session, handleUnlock, handleReset } = useContext(WalletConnectContext);
-  const [isReady, setIsReady] = useState(false);
+export function WalletConnectDecrypt({ onUnlock, goToPreviousStep }: OwnProps) {
+  const [uriData, setUriData] = useState();
+  const { displayToast, toastTemplates } = useContext(ToastContext);
 
-  const unlockAddress = (content: WalletConnectQrContent) => {
-    if (
-      typeof content === 'string' ||
-      !isValidAddress(content.address, !network ? 1 : network.chainId)
-    ) {
-      this.props.showNotification('danger', 'Not a valid address!');
-      return;
-    }
-    onUnlock(WalletService.init(content.address));
-  };
-
-  /* start:wallet-login-state */
-  // Used to reset the walletconnect session
   useEffect(() => {
-    if (isReady) return;
-    setIsReady(true);
-    handleReset();
-  });
+    // Set event handlers
+    const session = WalletConnectService({
+      handleInit: (uri: string) => {
+        setUriData(uri);
+      },
+      handleConnect: (address: TAddress) => onUnlock(WalletService.init(address)),
+      handleError: () => {
+        displayToast(toastTemplates.somethingWentWrong);
+      },
+      handleReject: () => {
+        goToPreviousStep();
+        displayToast(toastTemplates.walletConnectReject);
+      }
+    });
 
-  // Once walletconnect session is queued to reset, start unlock flow
-  useEffect(() => {
-    if (!isReady) return;
-    handleUnlock(unlockAddress);
-  });
-  /* end:wallet-login-state */
+    // Request a session connection
+    session.init();
+    // Make sure to kill the session when the component unmounts.
+    return () => {
+      session.kill();
+    };
+  }, []);
 
   return (
     <div className="WalletConnectPanel">
@@ -75,17 +58,12 @@ export function WalletConnectDecrypt({ formData, onUnlock }: OwnProps & StatePro
         {translate('UNLOCK_WALLET')} {`Your ${translateRaw('X_WALLETCONNECT')} device`}
       </div>
       <div className="WalletConnect">
-        {/* <div className="WalletConnect-title">{translate('SIGNER_SELECT_WALLET')}</div> */}
         <section className="WalletConnect-fields">
           <section className="Panel-description">
             {translate('SIGNER_SELECT_WALLET_QR', { $walletId: translateRaw('X_WALLETCONNECT') })}
           </section>
           <section className="WalletConnect-fields-field">
-            {session && session.uri ? (
-              <WalletConnectReadOnlyQr sessionUri={session.uri} />
-            ) : (
-              <Spinner />
-            )}
+            {uriData ? <WalletConnectReadOnlyQr sessionUri={uriData} /> : <Spinner />}
           </section>
         </section>
         {wikiLink && (
