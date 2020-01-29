@@ -14,12 +14,6 @@ interface OwnProps {
   goToPreviousStep(): void;
 }
 
-export enum WalletConnectQRState {
-  READY, // use when walletConnect session is created
-  CONNECTING, // use when walletConnect session needs to be created
-  UNKNOWN // used upon component initialization when walletconnect status is not determined
-}
-
 const WalletService = WalletFactory(WalletId.WALLETCONNECT);
 const wikiLink = WALLETS_CONFIG[WalletId.WALLETCONNECT].helpLink!;
 
