@@ -1,13 +1,8 @@
 import React, { useEffect, useReducer, useState, useContext } from 'react';
 
 import translate, { translateRaw } from 'v2/translations';
-import {
-  Button,
-  Spinner,
-  walletConnectReducer,
-  WalletConnectReducer,
-  WalletConnectReadOnlyQr
-} from 'v2/components';
+import { Button, Spinner, WalletConnectReadOnlyQr } from 'v2/components';
+import { walletConnectReducer, WalletConnectReducer } from './WalletConnect.reducer';
 import { WalletId, ISignComponentProps } from 'v2/types';
 import { WALLETS_CONFIG } from 'v2/config';
 import { WalletConnectContext } from 'v2/services/WalletService';
