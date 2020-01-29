@@ -3,7 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import translate, { translateRaw } from 'v2/translations';
 import { WalletId, TAddress } from 'v2/types';
 import { WALLETS_CONFIG } from 'v2/config';
-import { QRCode, Spinner } from 'v2/components';
+import { QRCodeContainer, Spinner } from 'v2/components';
 import { WalletFactory, WalletConnectService } from 'v2/services/WalletService';
 import { ToastContext } from 'v2/features/Toasts';
 
@@ -56,7 +56,7 @@ export function WalletConnectDecrypt({ onUnlock, goToPreviousStep }: OwnProps) {
             {translate('SIGNER_SELECT_WALLET_QR', { $walletId: translateRaw('X_WALLETCONNECT') })}
           </section>
           <section className="WalletConnect-fields-field">
-            {uriData ? <QRCode data={uriData} /> : <Spinner />}
+            {uriData ? <QRCodeContainer data={uriData} /> : <Spinner />}
           </section>
         </section>
         {wikiLink && (
