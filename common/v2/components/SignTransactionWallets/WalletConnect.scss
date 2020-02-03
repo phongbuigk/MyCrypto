@@ -1,44 +1,26 @@
-@import 'common/sass/variables';
-
-.WalletConnectPanel {
-  margin: 1em;
-}
-
-.WalletConnect {
-  position: relative;
-  justify-content: center;
+.wc-title {
+  font-family: Lato;
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--dark-slate-blue);
   text-align: center;
 
-  &-fields {
-    display: flex;
-    flex-direction: column;
-    margin: 0 1em;
-    text-overflow: ellipsis;
-
-    &-error {
-      margin-top: 15px;
-      padding-left: 8px;
-      padding-right: 8px;
-      line-height: 21px;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
-    }
-
-    &-spinner {
-      margin-top: 15px;
-    }
-
-    &-field {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      margin-top: 15px;
-    }
+  @media (max-width: 700px) {
+    font-size: 25px;
   }
-  &-wiki-link {
-    margin-top: 15px;
-  }
+}
+
+.wc-content {
+  text-overflow: ellipsis;
+}
+.wc-small {
+  font-size: 0.3em !important;
+}
+.wc-qr-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 415px;
+  width: 415px;
+  position: relative;
 }

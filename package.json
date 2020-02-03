@@ -124,6 +124,7 @@
     "@types/webpack-env": "1.15.0",
     "@types/yup": "0.26.27",
     "@types/zxcvbn": "4.4.0",
+    "@walletconnect/types": "1.0.0-beta.47",
     "babel-jest": "24.9.0",
     "babel-loader": "8.0.6",
     "babel-plugin-styled-components": "1.10.6",

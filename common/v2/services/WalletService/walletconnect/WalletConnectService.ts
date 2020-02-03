@@ -1,32 +1,43 @@
 import WalletConnect from '@walletconnect/browser';
-import { ITxData } from '@walletconnect/types';
+import { ITxData, IWalletConnectSession } from '@walletconnect/types';
 
 import { TAddress } from 'v2/types';
+import { noOp } from 'v2/utils';
 
 const WALLET_CONNECT_BRIDGE_URI = 'https://bridge.walletconnect.org';
 
 /*
   Wrapper around WalletConnect library to facilitate decoupling.
-  We pass the eventHandlers on initialisaiton and
+  We pass the eventHandlers on initialisaiton
 */
+
 interface EventHandlers {
   handleInit(uri: string): void;
-  handleConnect(address: TAddress): void;
+  handleConnect({
+    address,
+    chainId,
+    session
+  }: {
+    address: TAddress;
+    chainId: number;
+    session: IWalletConnectSession;
+  }): void;
   handleError(error: Error): void;
   handleReject(error: Error): void;
-  handleUpdate?(): void;
+  handleUpdate({ address, chainId }: { address: TAddress; chainId: number }): void;
   handleSessionRequest?(uri: string): void;
-  handleDisconnect?(params: any): void;
+  handleDisconnect(params: any): void;
 }
+
+export type ITxData = ITxData;
 
 export default function WalletConnectService({
   handleInit,
   handleConnect,
   handleError,
   handleReject,
-  // handleUpdate,
-  // handleSessionRequest,
-  handleDisconnect
+  handleUpdate,
+  handleDisconnect = noOp
 }: EventHandlers) {
   const connector = new WalletConnect({
     bridge: WALLET_CONNECT_BRIDGE_URI
@@ -35,15 +46,16 @@ export default function WalletConnectService({
   // Helper to extract message from payload.
   const getMessage = (payload: any) => (payload.params ? payload.params[0].message : false);
 
-  const isConnected = connector.connected;
-  const sendTx = (tx: ITxData) => connector.sendTransaction(tx);
+  const sendTx = (tx: ITxData) => {
+    return connector.sendTransaction(tx);
+  };
+
   const kill = () => connector.killSession();
 
   const init = () => {
     // Make sure we are dealing with the same session.
-    if (connector.connected) {
-      kill();
-    }
+    if (connector.connected) kill();
+
     connector.createSession().then(() => {
       // get uri for QR Code modal
       handleInit(connector.uri);
@@ -52,48 +64,36 @@ export default function WalletConnectService({
 
   // Subscribe to connection events
   connector.on('connect', (error, payload) => {
-    if (error) {
-      handleError(error);
-    }
-    const { accounts } = payload.params[0];
-    console.debug('Connected', accounts, payload.params);
-    handleConnect(accounts[0]);
+    if (error) handleError(error);
+
+    const { accounts, chainId } = payload.params[0];
+    handleConnect({ address: accounts[0] as TAddress, chainId, session: connector.session });
   });
 
   connector.on('session_update', (error, payload) => {
-    if (error) {
-      handleError(error);
-    }
+    if (error) handleError(error);
+
     // Get updated accounts and chainId
     const { accounts, chainId } = payload.params[0];
-    console.debug('update', accounts, chainId, payload);
+    handleUpdate({ address: accounts[0] as TAddress, chainId });
   });
 
   connector.on('disconnect', (error, payload) => {
-    if (error) {
-      handleError(error);
-    }
+    if (error) handleError(error);
 
     // Call handler when it exists and we are dealing with a normal disconnect
-    if (handleDisconnect && getMessage(payload) === 'Session Disconnected') {
-      handleDisconnect(payload.params);
+    if (handleReject && getMessage(payload) === 'Session Rejected') {
+      handleReject(payload.params);
     } else {
-      handleReject(payload);
+      // here the message is 'Session Disconnected'
+      handleDisconnect(payload);
     }
-  });
-
-  connector.on('session_request', (error, payload) => {
-    if (error) {
-      handleError(error);
-    }
-    console.debug('session_request', payload);
-    // Delete walletConnector
   });
 
   return {
     init,
     kill,
-    isConnected,
-    sendTx
+    sendTx,
+    isConnected: connector.connected
   };
 }
