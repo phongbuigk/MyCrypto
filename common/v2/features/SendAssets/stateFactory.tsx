@@ -128,9 +128,10 @@ const TxConfigFactory: TUseStateReducerFactory<State> = ({ state, setState }) =>
   const handleSignedTx: TStepAction = (payload: ISignedTx, after) => {
     const decodedTx = decodeTransaction(payload);
     const networkDetected = getNetworkByChainId(decodedTx.chainId, networks);
-    const contractAsset = getAssetByContractAndNetwork(decodedTx.to || undefined, networkDetected)(
-      assets
-    );
+    const contractAsset = getAssetByContractAndNetwork(
+      decodedTx.to || undefined,
+      networkDetected
+    )(assets);
     const baseAsset = getBaseAssetByNetwork({
       network: networkDetected || ({} as Network),
       assets
@@ -175,8 +176,8 @@ const TxConfigFactory: TUseStateReducerFactory<State> = ({ state, setState }) =>
         ? {
             ...state.txConfig,
             hash: payload,
-            to: state.txConfig.senderAccount.address,
-            from: state.txConfig.receiverAddress
+            to: state.txConfig.receiverAddress,
+            from: state.txConfig.senderAccount.address
           }
         : fromTxReceiptObj(payload);
     addNewTransactionToAccount(
