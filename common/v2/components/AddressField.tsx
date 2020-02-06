@@ -3,7 +3,7 @@ import { Input, Identicon } from '@mycrypto/ui';
 import { FieldProps, Field, FormikTouched } from 'formik';
 import styled from 'styled-components';
 
-import { getENSTLDForChain } from 'v2/services/EthService';
+import { getIsValidENSAddressFunction } from 'v2/services/EthService';
 import { InlineErrorMsg, ENSStatus } from 'v2/components';
 import { Network, IFormikFields } from 'v2/types';
 import { monospace } from 'v2/theme';
@@ -108,8 +108,8 @@ function ETHAddressField({
                   if (!network || !network.chainId) {
                     return;
                   }
-                  const ensTLD = getENSTLDForChain(network.chainId);
-                  const isENSAddress = e.currentTarget.value.endsWith(`.${ensTLD}`);
+                  const isValidEnsAddress = getIsValidENSAddressFunction(network.chainId);
+                  const isENSAddress = isValidEnsAddress(e.currentTarget.value);
                   const action =
                     isENSAddress && handleENSResolve
                       ? (ensName: string) => handleENSResolve(ensName)
