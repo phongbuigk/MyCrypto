@@ -246,6 +246,11 @@ export default function SendAssetsForm({
                 value: resolvedAddress
               });
             } else {
+              // Force the field value to error so that isValidAddress is triggered!
+              setFieldValue('address', {
+                ...values.address,
+                value: ''
+              });
               setFieldError('address', translateRaw('TO_FIELD_ERROR'));
             }
             setIsResolvingENSName(false);
