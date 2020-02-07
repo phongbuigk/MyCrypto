@@ -11,10 +11,10 @@ import hardwareWalletIcon from 'common/assets/images/icn-hardware-wallet.svg';
 
 export const actions: Action[] = [
   {
-    icon: buyIcon,
-    title: translateRaw('DASHBOARD_ACTIONS_BUY_ASSETS_TITLE'),
-    link: ROUTE_PATHS.BUY.path,
-    description: translateRaw('DASHBOARD_ACTIONS_BUY_ASSETS_SUBTITLE')
+    icon: sendIcon,
+    title: translateRaw('DASHBOARD_ACTIONS_SEND_ASSETS_TITLE'),
+    link: ROUTE_PATHS.SEND.path,
+    description: translateRaw('DASHBOARD_ACTIONS_SEND_ASSETS_SUBTITLE')
   },
   {
     icon: swapIcon,
@@ -23,16 +23,16 @@ export const actions: Action[] = [
     description: translateRaw('DASHBOARD_ACTIONS_SWAP_ASSETS_SUBTITLE')
   },
   {
-    icon: sendIcon,
-    title: translateRaw('DASHBOARD_ACTIONS_SEND_ASSETS_TITLE'),
-    link: ROUTE_PATHS.SEND.path,
-    description: translateRaw('DASHBOARD_ACTIONS_SEND_ASSETS_SUBTITLE')
-  },
-  {
     icon: receiveIcon,
     title: translateRaw('DASHBOARD_ACTIONS_REQUEST_ASSETS_TITLE'),
     link: ROUTE_PATHS.REQUEST_ASSETS.path,
     description: translateRaw('DASHBOARD_ACTIONS_REQUEST_ASSETS_SUBTITLE')
+  },
+  {
+    icon: buyIcon,
+    title: translateRaw('DASHBOARD_ACTIONS_BUY_ASSETS_TITLE'),
+    link: ROUTE_PATHS.BUY.path,
+    description: translateRaw('DASHBOARD_ACTIONS_BUY_ASSETS_SUBTITLE')
   },
   {
     icon: hardwareWalletIcon,
