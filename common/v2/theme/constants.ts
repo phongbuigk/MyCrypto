@@ -29,7 +29,8 @@ export const COLORS = {
   DARK_BLUE: '#1c314e',
   ATHENS_GREY: '#e8eaed',
   GEYSER_GREY: '#d6dce5',
-  ERROR_RED: '#FF5050'
+  ERROR_RED: '#FF5050',
+  PURPLE: '#A086F7'
 };
 
 export const BREAK_POINTS = {
