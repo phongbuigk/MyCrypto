@@ -5,7 +5,7 @@ import translate, { translateRaw } from 'v2/translations';
 import BreakdownChart from './BreakdownChart';
 import NoAssets from './NoAssets';
 import { WalletBreakdownProps, Balance } from './types';
-import { COLORS, BREAK_POINTS } from 'v2/theme';
+import { BREAK_POINTS, COLORS, FONT_SIZE, SPACING } from 'v2/theme';
 import { TSymbol } from 'v2/types';
 import { AssetIcon, Currency, Typography } from 'v2/components';
 
@@ -14,33 +14,30 @@ import moreIcon from 'common/assets/images/icn-more.svg';
 export const SMALLEST_CHART_SHARE_SUPPORTED = 0.03; // 3%
 export const NUMBER_OF_ASSETS_DISPLAYED = 4;
 
-const { BRIGHT_SKY_BLUE } = COLORS;
-const { SCREEN_MD, SCREEN_XS } = BREAK_POINTS;
-
 const BreakDownHeading = styled.div`
   display: flex;
   flex-direction: column;
   align-items: baseline;
   margin: 0;
-  font-size: 20px;
+  font-size: ${FONT_SIZE.LG};
   font-weight: bold;
-  color: #424242;
+  color: ${COLORS.BLUE_DARK_SLATE};
 
-  @media (min-width: ${SCREEN_XS}) {
-    font-size: 24px;
+  @media (min-width: ${BREAK_POINTS.SCREEN_XS}) {
+    font-size: ${FONT_SIZE.XL};
     flex-direction: row;
   }
 `;
 
 const BreakDownLabel = styled.div`
-  color: #b5bfc7;
-  font-size: 16px;
+  color: ${COLORS.BLUE_GREY};
+  font-size: ${FONT_SIZE.BASE};
   font-style: italic;
   font-weight: normal;
-  margin: 5px 0 0 0;
+  margin: ${SPACING.XS} 0 0 0;
 
-  @media (min-width: ${SCREEN_XS}) {
-    margin: 0 0 0 5px;
+  @media (min-width: ${BREAK_POINTS.SCREEN_XS}) {
+    margin: 0 0 0 ${SPACING.XS};
   }
 `;
 
@@ -51,8 +48,8 @@ const BreakDownChartWrapper = styled.div`
   padding-bottom: 15px;
   height: 530px;
 
-  @media (max-width: ${SCREEN_MD}) {
     padding-right: 15px;
+  @media (max-width: ${BREAK_POINTS.SCREEN_MD}) {
   }
 `;
 
@@ -71,7 +68,7 @@ const PanelFigureValue = styled.div`
 
 const PanelFigureLabel = styled.div`
   margin: 0;
-  font-size: 16px;
+  font-size: ${FONT_SIZE.BASE};
   font-weight: normal;
 `;
 
@@ -89,7 +86,7 @@ const PanelDivider = styled.div<PanelDividerProps>`
   ${props =>
     props.mobileOnly &&
     `
-  @media (min-width: ${SCREEN_MD}) {
+  @media (min-width: ${BREAK_POINTS.SCREEN_MD}) {
     display: none;
   }`};
 `;
@@ -97,53 +94,53 @@ const PanelDivider = styled.div<PanelDividerProps>`
 const VerticalPanelDivider = styled.div`
   width: 1px;
   margin: 0 15px;
-  background: #ddd;
+  background: ${COLORS.GREY_LIGHT};
   display: none;
 
-  @media (min-width: ${SCREEN_MD}) {
+  @media (min-width: ${BREAK_POINTS.SCREEN_MD}) {
     display: block;
   }
 `;
 
 const BreakDownBalances = styled.div`
-  flex: 1;
   padding-right: 15px;
   padding-top: 15px;
   padding-bottom: 15px;
 
   display: flex;
   flex-direction: column;
+  flex: 1;
 
-  @media (max-width: ${SCREEN_MD}) {
     padding-left: 15px;
+  @media (max-width: ${BREAK_POINTS.SCREEN_MD}) {
   }
 `;
 
 const BreakDownHeadingWrapper = styled.div`
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
 `;
 
 const BreakDownMore = styled.img`
-  display: block;
   cursor: pointer;
+  display: block;
 `;
 
 const BreakDownBalanceList = styled.div`
+  color: ${COLORS.GREY_DARKEST};
   display: flex;
   flex-direction: column;
-  color: #282d32;
-  font-size: 16px;
+  font-size: ${FONT_SIZE.BASE};
   font-weight: normal;
 `;
 
 const BreakDownBalance = styled.div`
+  align-items: center;
   display: flex;
   justify-content: space-between;
-  margin: 11px 0;
   line-height: 1.2;
-  align-items: center;
+  margin: ${SPACING.SM} 0;
 
   &:first-of-type {
     margin-top: 16px;
@@ -151,7 +148,7 @@ const BreakDownBalance = styled.div`
 `;
 
 const BreakDownBalanceAssetIcon = styled(AssetIcon)`
-  margin-right: 10px;
+  margin-right: ${SPACING.SM};
 `;
 
 const BreakDownBalanceAssetInfo = styled.div`
@@ -166,14 +163,14 @@ const BreakDownBalanceAssetName = styled.div`
 
 const BreakDownBalanceAssetAmount = styled(BreakDownBalanceAssetName)`
   a {
-    color: ${BRIGHT_SKY_BLUE};
+    color: ${COLORS.BRIGHT_SKY_BLUE};
   }
   ${(props: { silent?: boolean }) =>
     props.silent === true &&
     css`
-      color: ${COLORS.CLOUDY_BLUE};
-      font-size: 0.8em;
-    `}
+      color: ${COLORS.BLUE_GREY};
+      font-size: ${FONT_SIZE.SM};
+    `};
 `;
 
 const BalanceTotalWrapper = styled.div`
@@ -183,12 +180,12 @@ const BalanceTotalWrapper = styled.div`
 const BreakDownBalanceTotal = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 16px;
+  font-size: ${FONT_SIZE.BASE};
   font-weight: normal;
 `;
 
 const ViewDetailsLink = styled.a`
-  color: #1eb8e7;
+  color: ${COLORS.BRIGHT_SKY_BLUE};
 `;
 
 export default function WalletBreakdownView({
@@ -209,7 +206,7 @@ export default function WalletBreakdownView({
   const handleMouseOver = (_: any, index: number) => setSelectedAssetIndex(index);
 
   const handleMouseLeave = (_: any) => setSelectedAssetIndex(-1);
-      
+
   const allVisible = accounts.length !== 0 && accounts.length === selected.length;
 
   const label = allVisible
