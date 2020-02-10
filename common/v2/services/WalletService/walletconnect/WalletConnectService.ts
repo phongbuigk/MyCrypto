@@ -1,5 +1,5 @@
 import WalletConnect from '@walletconnect/browser';
-import { ITxData, IWalletConnectSession } from '@walletconnect/types';
+import { ITxData as _ITxData, IWalletConnectSession } from '@walletconnect/types';
 
 import { TAddress } from 'v2/types';
 import { noOp } from 'v2/utils';
@@ -29,7 +29,7 @@ interface EventHandlers {
   handleDisconnect(params: any): void;
 }
 
-export type ITxData = ITxData;
+export type ITxData = _ITxData;
 
 export default function WalletConnectService({
   handleInit,
