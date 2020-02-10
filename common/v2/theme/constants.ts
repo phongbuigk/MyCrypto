@@ -30,7 +30,8 @@ export const COLORS = {
   ATHENS_GREY: '#e8eaed',
   GEYSER_GREY: '#d6dce5',
   ERROR_RED: '#FF5050',
-  PURPLE: '#A086F7'
+  PURPLE: '#A086F7',
+  ORANGE: '#FA863F'
 };
 
 export const BREAK_POINTS = {
